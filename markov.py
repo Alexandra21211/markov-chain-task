@@ -1,4 +1,5 @@
 import random
+import sys
 
 def read_file(filename):
     with open(filename, 'r', encoding='utf-8') as f:
@@ -34,8 +35,14 @@ def generate_text(chains, length, chain_length=2):
     return ' '.join(result)
 
 if __name__ == '__main__':
-    filename = 'sample.txt'
+    if len(sys.argv) != 3:
+        print("Использование: python markov.py <имя_файла> <длина_текста>")
+        sys.exit(1)
+    
+    filename = sys.argv[1]
+    length = int(sys.argv[2])
+    
     words = read_file(filename)
     chains = build_chains(words, chain_length=2)
-    text = generate_text(chains, length=50, chain_length=2)
+    text = generate_text(chains, length, chain_length=2)
     print(text)
