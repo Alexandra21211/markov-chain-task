@@ -1,0 +1,41 @@
+import random
+
+def read_file(filename):
+    with open(filename, 'r', encoding='utf-8') as f:
+        text = f.read()
+    return text.split()
+
+def build_chains(words, chain_length=2):
+    chains = {}
+    for i in range(len(words) - chain_length):
+        key = tuple(words[i:i + chain_length])
+        next_word = words[i + chain_length]
+        if key not in chains:
+            chains[key] = []
+        chains[key].append(next_word)
+    return chains
+
+def generate_text(chains, length, chain_length=2):
+    starts = [k for k in chains.keys() if k[0][0].isupper()]
+    if not starts:
+        starts = list(chains.keys())
+    
+    current = random.choice(starts)
+    result = list(current)
+    
+    while len(result) < length:
+        if current in chains:
+            next_word = random.choice(chains[current])
+            result.append(next_word)
+            current = tuple(list(current[1:]) + [next_word])
+        else:
+            break
+    
+    return ' '.join(result)
+
+if __name__ == '__main__':
+    filename = 'sample.txt'
+    words = read_file(filename)
+    chains = build_chains(words, chain_length=2)
+    text = generate_text(chains, length=50, chain_length=2)
+    print(text)
