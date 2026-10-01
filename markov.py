@@ -35,14 +35,21 @@ def generate_text(chains, length, chain_length=2):
     return ' '.join(result)
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Использование: python markov.py <имя_файла> <длина_текста>")
+    if len(sys.argv) < 3 or len(sys.argv) > 4:
+        print("Использование: python markov.py <имя_файла> <длина_текста> [длина_цепочки]")
+        print("По умолчанию длина цепочки = 2")
         sys.exit(1)
     
     filename = sys.argv[1]
     length = int(sys.argv[2])
     
+    # Если передан третий аргумент, используем его как длину цепочки
+    if len(sys.argv) == 4:
+        chain_length = int(sys.argv[3])
+    else:
+        chain_length = 2
+    
     words = read_file(filename)
-    chains = build_chains(words, chain_length=2)
-    text = generate_text(chains, length, chain_length=2)
+    chains = build_chains(words, chain_length=chain_length)
+    text = generate_text(chains, length, chain_length=chain_length)
     print(text)
